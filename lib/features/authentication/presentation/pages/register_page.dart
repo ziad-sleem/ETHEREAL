@@ -1,9 +1,6 @@
-import 'package:e_commerce/config/di/di.dart';
-import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:e_commerce/core/widgets/custom_elevated_button.dart';
 import 'package:e_commerce/core/widgets/custom_snack_bar.dart';
 import 'package:e_commerce/features/authentication/presentation/cubit/auth_cubit.dart';
-import 'package:e_commerce/features/authentication/presentation/pages/otp_page.dart';
 import 'package:e_commerce/features/authentication/presentation/widgets/auth_app_bar.dart';
 import 'package:e_commerce/features/authentication/presentation/widgets/auth_welcom_widget.dart';
 import 'package:e_commerce/core/widgets/custom_text_field.dart';

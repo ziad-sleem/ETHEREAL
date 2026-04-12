@@ -1,5 +1,4 @@
 import 'package:e_commerce/config/base_response/base_response.dart';
-import 'package:e_commerce/features/authentication/domain/entities/verify_entity.dart';
 import 'package:e_commerce/features/authentication/domain/repositories/auth_repo.dart';
 import 'package:injectable/injectable.dart';
 
