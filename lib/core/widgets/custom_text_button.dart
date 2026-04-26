@@ -1,4 +1,3 @@
-import 'package:e_commerce/core/app_colors.dart';
 import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
@@ -17,16 +16,13 @@ class CustomTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
     return SizedBox(
       child: TextButton(
         onPressed: isEnable && !isLoading ? onPressed : null,
         child: isLoading
-            ? SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator.adaptive(),
-              )
-            : AppText(text: text, textColor: AppColors.primary),
+            ? AppText(text: "Loading...", textColor: theme.primary)
+            : AppText(text: text, textColor: theme.primary),
       ),
     );
   }

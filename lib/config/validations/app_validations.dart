@@ -11,19 +11,6 @@ class AppValidations {
     return null;
   }
 
-  // ── Name ──
-  static String? validateUserName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return AppStrings.usernameRequired;
-    }
-    if (value.length < 3) {
-      return AppStrings.usernameTooShort;
-    }
-    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
-      return AppStrings.usernameInvalid;
-    }
-    return null;
-  }
 
   static String? validateFirstName(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -88,25 +75,4 @@ class AppValidations {
     return null;
   }
 
-  static String? validateConfirmPassword(String? value, String? password) {
-    if (value == null || value.isEmpty) {
-      return AppStrings.confirmPasswordRequired;
-    }
-    if (value != password) {
-      return AppStrings.passwordNotMatched;
-    }
-    return null;
-  }
-
-  // ── Phone ──
-  static String? validatePhoneNumber(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return AppStrings.phoneRequired;
-    }
-    final cleaned = value.replaceAll(RegExp(r'[\s\-\(\)]'), '');
-    if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(cleaned)) {
-      return AppStrings.invalidPhone;
-    }
-    return null;
-  }
 }
