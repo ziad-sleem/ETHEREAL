@@ -11,6 +11,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSourceContract {
 
   static const String _tokenKey = 'auth_token';
   static const String _refreshTokenKey = 'refresh_token';
+  static const String _expiresAtKey = 'expires_at';
 
   @override
   Future<void> saveToken(String token) async {
@@ -41,5 +42,15 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSourceContract {
   @override
   Future<void> saveRefreshToken(String token) async {
     await secureStorage.write(key: _refreshTokenKey, value: token);
+  }
+
+  @override
+  Future<void> saveExpirationDate(String expiresAt) async {
+    await secureStorage.write(key: _expiresAtKey, value: expiresAt);
+  }
+
+  @override
+  Future<String?> getExpirationDate() async {
+    return await secureStorage.read(key: _expiresAtKey);
   }
 }

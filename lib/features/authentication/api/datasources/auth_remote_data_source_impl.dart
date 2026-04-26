@@ -29,9 +29,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSourceContract {
 
       final accessToken = response.accessToken;
       final refreshToken = response.refreshToken;
+      final expiresAtUtc = response.expiresAtUtc;
 
       await localDataSource.saveToken(accessToken);
       await localDataSource.saveRefreshToken(refreshToken);
+      await localDataSource.saveExpirationDate(expiresAtUtc);
 
       return SuccessBaseResponse<String>(accessToken);
     } catch (e) {

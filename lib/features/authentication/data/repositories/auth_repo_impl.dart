@@ -110,6 +110,24 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<bool> isLoggedIn() async {
     final token = await authLocalDataSourceContract.getToken();
-    return token != null && token.isNotEmpty;
+    if (token == null || token.isEmpty) return false;
+
+    final expiresAtStr = await authLocalDataSourceContract.getExpirationDate();
+    if (expiresAtStr != null && expiresAtStr.isNotEmpty) {
+      try {
+        final expiresAt = DateTime.parse(expiresAtStr);
+        if (DateTime.now().toUtc().isAfter(expiresAt)) {
+          // Token is expired, clean up local storage
+          await authLocalDataSourceContract.deleteToken();
+          await authLocalDataSourceContract.deleteRefreshToken();
+          return false;
+        }
+      } catch (e) {
+        // If parsing fails, assume invalid/expired token for safety
+        return false;
+      }
+    }
+
+    return true;
   }
 }

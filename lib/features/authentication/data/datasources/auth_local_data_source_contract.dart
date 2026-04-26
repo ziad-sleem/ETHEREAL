@@ -6,6 +6,7 @@ abstract class AuthLocalDataSourceContract {
   Future<void> saveRefreshToken(String token);
   Future<String> getRefreshToken();  
   Future<void> deleteRefreshToken();
-
+  Future<void> saveExpirationDate(String expiresAt);
+  Future<String?> getExpirationDate();
  
 }
