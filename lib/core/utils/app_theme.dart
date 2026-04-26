@@ -1,4 +1,5 @@
 import 'package:e_commerce/core/utils/app_colors.dart';
+import 'package:e_commerce/core/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
 
 abstract class AppTheme {
@@ -11,20 +12,17 @@ abstract class AppTheme {
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.white,
         elevation: 0,
-        centerTitle: true,
+        centerTitle: false,
         titleTextStyle: TextStyle(
           color: AppColors.secondary,
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
+        child: AppLogo(),
       ),
-
 
       // divider
-      dividerTheme: DividerThemeData(
-        color: AppColors.grey,
-        thickness: 2,
-      ),
+      dividerTheme: DividerThemeData(color: AppColors.lightGrey, thickness: 1),
 
       // color scheme
       colorScheme: ColorScheme(
@@ -38,6 +36,27 @@ abstract class AppTheme {
         surface: AppColors.white,
         onSurface: AppColors.secondary,
       ),
+
+      // text field
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(
+          fontFamily: 'Podkova',
+          fontSize: 18,
+          color: AppColors.primary,
+        ),
+
+        errorStyle: const TextStyle(color: AppColors.error),
+        border: _border(AppColors.grey),
+        enabledBorder: _border(AppColors.grey),
+        focusedBorder: _border(AppColors.primary, 2),
+        errorBorder: _border(AppColors.error),
+        focusedErrorBorder: _border(AppColors.error, 2),
+      ),
     );
   }
 }
+
+UnderlineInputBorder _border(Color color, [double width = 1]) =>
+    UnderlineInputBorder(
+      borderSide: BorderSide(color: color, width: width),
+    );

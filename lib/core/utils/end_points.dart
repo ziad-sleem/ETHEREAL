@@ -11,4 +11,8 @@ class EndPoints {
   static const String verifyOTP = "auth/verify-email";
   static const String logout = "auth/logout";
   static const String profileData = "auth/me";
+
+  static const String products = "products";
+  static const String categories = "categories";
+  static const String categoryById = "categories/{id}";
 }

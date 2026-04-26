@@ -25,7 +25,7 @@ class AppText extends StatelessWidget {
     return Text(
       text,
       maxLines: maxLineText,
-      textAlign: TextAlign.center,
+      textAlign: textAlign,
       style: TextStyle(
         color: textColor,
         fontFamily: 'Podkova',
