@@ -15,7 +15,11 @@ abstract class DioModule {
     dio.options.connectTimeout = const Duration(seconds: 30);
     dio.options.receiveTimeout = const Duration(seconds: 30);
 
-    // Using Logger for pretty logging since pretty_dio_logger is not in pubspec
+    dio.options.headers = {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    };
+
     final logger = Logger(
       printer: PrettyPrinter(
         methodCount: 0,
@@ -29,17 +33,26 @@ abstract class DioModule {
 
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
+          final token = await authLocalDataSource.getToken();
+
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token'; // ✅ FIX
+          }
+
           logger.i("REQUEST[${options.method}] => PATH: ${options.path}");
+          logger.d("Headers: ${options.headers}");
           logger.d("Data: ${options.data}");
-          return handler.next(options);
+
+          handler.next(options);
         },
         onResponse: (response, handler) {
           logger.i(
             "RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}",
           );
           logger.d("Data: ${response.data}");
-          return handler.next(response);
+
+          handler.next(response);
         },
         onError: (DioException e, handler) {
           logger.e(
@@ -47,31 +60,11 @@ abstract class DioModule {
           );
           logger.e("Message: ${e.message}");
           logger.e("Response Data: ${e.response?.data}");
-          return handler.next(e);
+
+          handler.next(e);
         },
       ),
     );
-
-    dio.options.headers = {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    };
-
-    dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          final token = await authLocalDataSource.getToken();
-
-          if (token != null) {
-            options.headers['token'] = token;
-          }
-
-          handler.next(options);
-        },
-      ),
-    );
-
-    dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
 
     return dio;
   }
