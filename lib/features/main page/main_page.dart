@@ -1,3 +1,4 @@
+import 'package:e_commerce/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -19,7 +20,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   static const List<Widget> _pages = [
-    Center(child: Text('Home Page', style: TextStyle(fontSize: 24))),
+    HomePage(),
     Center(child: Text('Categories', style: TextStyle(fontSize: 24))),
     Center(child: Text('Favorites', style: TextStyle(fontSize: 24))),
     Center(child: Text('Profile', style: TextStyle(fontSize: 24))),
@@ -30,7 +31,7 @@ class _MainPageState extends State<MainPage> {
     final theme = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: theme.surface,
-      body: _pages[_selectedIndex],
+      body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: theme.surface,
