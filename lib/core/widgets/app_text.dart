@@ -1,4 +1,4 @@
-import 'package:e_commerce/core/app_colors.dart';
+import 'package:e_commerce/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppText extends StatelessWidget {
@@ -7,6 +7,7 @@ class AppText extends StatelessWidget {
   final FontWeight textWeight;
   final Color textColor;
   final int maxLineText;
+  final TextAlign textAlign;
   final double spacing;
   const AppText({
     super.key,
@@ -16,6 +17,7 @@ class AppText extends StatelessWidget {
     this.textColor = AppColors.black,
     this.maxLineText = 1,
     this.spacing = 1,
+    this.textAlign = TextAlign.start,
   });
 
   @override
@@ -23,6 +25,7 @@ class AppText extends StatelessWidget {
     return Text(
       text,
       maxLines: maxLineText,
+      textAlign: textAlign,
       style: TextStyle(
         color: textColor,
         fontFamily: 'Podkova',

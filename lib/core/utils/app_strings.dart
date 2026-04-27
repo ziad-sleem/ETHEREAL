@@ -90,4 +90,13 @@ class AppStrings {
   static const String nameNoNumbers = 'Name must not contain numbers';
   static const String phoneRequired = 'Phone number is required';
   static const String invalidPhone = 'Enter a valid phone number';
+
+
+
+
+  static const String iamge1 = 'https://img.freepik.com/premium-photo/fashion-model-walks-confidently-towards-camera-flowing-brown-coat-against-white-wall-illuminated-by-soft-sunlight_248459-33355.jpg';
+  static const String iamge2 = 'https://img.freepik.com/premium-photo/beautiful-young-woman-sits-squatting-looks-up-light-through-blinds-soft-focus-portrait_128442-1317.jpg';
+
+
+
 }

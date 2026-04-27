@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:e_commerce/config/base_response/base_response.dart';
 
@@ -44,10 +45,46 @@ class ErrorHandler {
     }
 
     final statusCode = response.statusCode;
-    final dynamic data = response.data;
+    dynamic data = response.data;
+    Map<String, dynamic>? dataMap;
 
-    if (data is Map<String, dynamic> && data.containsKey('message')) {
-      return data['message'];
+    if (data is Map<String, dynamic>) {
+      dataMap = data;
+    } else if (data is String) {
+      try {
+        dataMap = jsonDecode(data) as Map<String, dynamic>;
+      } catch (_) {
+        // Not a valid JSON string
+      }
+    }
+
+    if (dataMap != null) {
+      if (dataMap.containsKey('errors')) {
+        final errors = dataMap['errors'];
+        if (errors is Map<String, dynamic>) {
+          List<String> errorMessages = [];
+          for (var value in errors.values) {
+            if (value is List) {
+              for (var msg in value) {
+                errorMessages.add(msg.toString());
+              }
+            } else {
+              errorMessages.add(value.toString());
+            }
+          }
+          if (errorMessages.isNotEmpty) {
+            return errorMessages.join('\n');
+          }
+        } else if (errors is List) {
+          return errors.join('\n');
+        } else if (errors is String) {
+          return errors;
+        }
+      }
+
+      if (dataMap.containsKey('message')) {
+        return dataMap['message'].toString();
+      }
     }
 
     switch (statusCode) {

@@ -1,3 +1,5 @@
+import 'package:e_commerce/core/utils/app_colors.dart';
+import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomSnackBar {
@@ -8,14 +10,18 @@ class CustomSnackBar {
           children: [
             Icon(Icons.check_circle, color: Colors.white),
             SizedBox(width: 10),
-            Expanded(child: Text(message)),
+            Expanded(
+              child: AppText(
+                text: message,
+                textColor: Colors.white,
+                maxLineText: 5,
+              ),
+            ),
           ],
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -27,14 +33,18 @@ class CustomSnackBar {
           children: [
             Icon(Icons.error, color: Colors.white),
             SizedBox(width: 10),
-            Expanded(child: Text(message)),
+            Expanded(
+              child: AppText(
+                text: message,
+                textColor: Colors.white,
+                maxLineText: 5,
+              ),
+            ),
           ],
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
