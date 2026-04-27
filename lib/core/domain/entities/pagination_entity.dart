@@ -1,15 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:e_commerce/features/home/domain/entities/product_entity.dart';
 
-class PaginatedProductsEntity extends Equatable {
-  final List<ProductEntity> items;
+class PaginationEntity<T> extends Equatable {
+  final List<T> items;
   final int page;
   final int pageSize;
   final int totalCount;
   final bool hasNextPage;
   final bool hasPreviousPage;
 
-  const PaginatedProductsEntity({
+  const PaginationEntity({
     required this.items,
     required this.page,
     required this.pageSize,

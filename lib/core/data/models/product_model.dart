@@ -1,5 +1,5 @@
+import 'package:e_commerce/core/domain/entities/product_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:e_commerce/features/home/domain/entities/product_entity.dart';
 
 part 'product_model.g.dart';
 
