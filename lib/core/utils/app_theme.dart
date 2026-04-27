@@ -14,7 +14,7 @@ abstract class AppTheme {
         elevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
-          color: AppColors.secondary,
+          color: AppColors.primary,
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
@@ -44,7 +44,7 @@ abstract class AppTheme {
           fontSize: 18,
           color: AppColors.primary,
         ),
-
+        
         errorStyle: const TextStyle(color: AppColors.error),
         border: _border(AppColors.grey),
         enabledBorder: _border(AppColors.grey),
