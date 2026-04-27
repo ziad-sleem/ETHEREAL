@@ -3,8 +3,9 @@ import 'package:e_commerce/config/base_response/base_response.dart';
 import 'package:e_commerce/config/base_state/base_state.dart';
 import 'package:e_commerce/config/error_handler/error_handler.dart';
 import 'package:e_commerce/features/home/domain/entities/category_entity.dart';
-import 'package:e_commerce/features/home/domain/entities/product_entity.dart';
-import 'package:e_commerce/features/home/domain/usecases/get_all_products_use_case.dart';
+import 'package:e_commerce/core/domain/entities/pagination_entity.dart';
+import 'package:e_commerce/core/domain/entities/product_entity.dart';
+import 'package:e_commerce/core/domain/usecases/get_all_products_use_case.dart';
 import 'package:e_commerce/features/home/domain/usecases/get_category_by_id_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:e_commerce/features/home/domain/usecases/get_all_categories_use_case.dart';
@@ -12,7 +13,7 @@ import 'package:injectable/injectable.dart';
 
 part 'home_state.dart';
 
-@injectable
+@lazySingleton
 class HomeCubit extends Cubit<HomeState> {
   final GetAllCategoriesUseCase _getAllCategoriesUseCase;
   final GetAllProductsUseCase _getAllProductsUseCase;
@@ -39,17 +40,17 @@ class HomeCubit extends Cubit<HomeState> {
       final result = await _getAllProductsUseCase.call(1, 10000);
 
       switch (result) {
-        case SuccessBaseResponse<List<ProductEntity>>():
+        case SuccessBaseResponse<PaginationEntity<ProductEntity>>():
           if (isClosed) return;
           emit(
             state.copyWith(
               productsState: state.productsState.copyWith(
                 isLoading: false,
-                data: result.data,
+                data: result.data.items,
               ),
             ),
           );
-        case ErrorBaseResponse<List<ProductEntity>>():
+        case ErrorBaseResponse<PaginationEntity<ProductEntity>>():
           if (isClosed) return;
           emit(
             state.copyWith(
