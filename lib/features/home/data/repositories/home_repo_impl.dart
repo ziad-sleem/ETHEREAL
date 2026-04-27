@@ -1,8 +1,6 @@
 import 'package:e_commerce/config/base_response/base_response.dart';
 import 'package:e_commerce/features/home/data/datasources/home_remote_data_source_contract.dart';
-import 'package:e_commerce/features/home/data/models/product_model.dart';
 import 'package:e_commerce/features/home/domain/entities/category_entity.dart';
-import 'package:e_commerce/features/home/domain/entities/product_entity.dart';
 import 'package:e_commerce/features/home/domain/repos/home_repo.dart';
 import 'package:e_commerce/features/home/data/models/category_model.dart';
 import 'package:injectable/injectable.dart';
@@ -12,25 +10,6 @@ class HomeRepoImpl implements HomeRepo {
   final HomeRemoteDataSourceContract homeRemoteDataSourceContract;
 
   HomeRepoImpl({required this.homeRemoteDataSourceContract});
-
-  @override
-  Future<BaseResponse<List<ProductEntity>>> getProducts(int page, int pageSize) async {
-    final response = await homeRemoteDataSourceContract.getProducts(
-      page,
-      pageSize,
-    );
-
-    switch (response) {
-      case SuccessBaseResponse<List<ProductModel>>():
-        return SuccessBaseResponse<List<ProductEntity>>(
-          response.data.map((e) => e.toEntity()).toList(),
-        );
-      case ErrorBaseResponse<List<ProductModel>>():
-        return ErrorBaseResponse<List<ProductEntity>>(
-          response.errorMessage,
-        );
-    }
-  }
 
   @override
   Future<BaseResponse<List<CategoryEntity>>> getCategories() async {
