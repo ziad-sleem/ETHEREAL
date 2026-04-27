@@ -1,16 +1,17 @@
 import 'package:e_commerce/config/di/di.dart';
+import 'package:e_commerce/core/domain/entities/product_entity.dart';
 import 'package:e_commerce/core/widgets/app_footer.dart';
 import 'package:e_commerce/core/widgets/app_logo.dart';
 import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:e_commerce/core/widgets/loading_widget.dart';
 import 'package:e_commerce/features/home/domain/entities/category_entity.dart';
-import 'package:e_commerce/features/home/domain/entities/product_entity.dart';
 import 'package:e_commerce/features/home/presentation/cubit/home_cubit.dart';
 import 'package:e_commerce/features/home/presentation/widgets/category_circle_widget.dart';
 import 'package:e_commerce/features/home/presentation/widgets/director_widget.dart';
 import 'package:e_commerce/features/home/presentation/widgets/discover_film_widget.dart';
 import 'package:e_commerce/features/home/presentation/widgets/product_widget.dart';
 import 'package:e_commerce/features/home/presentation/widgets/selected_for_you_widget.dart';
+import 'package:e_commerce/features/search/presentation/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,18 +53,32 @@ class HomePage extends StatelessWidget {
                           children: [
                             headerTextWidget("Search"),
                             const SizedBox(height: 8),
-                            TextField(
-                              controller: searchController,
-                              style: TextStyle(
-                                fontFamily: 'Podkova',
-                                fontSize: 18,
-                                color: theme.primary,
-                              ),
-                              decoration: const InputDecoration(
-                                hintText: "Explore The Collection...",
+                            Hero(
+                              tag: 'search_tag',
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: TextField(
+                                  readOnly: true,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation, secondaryAnimation) => const SearchPage(),
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          return FadeTransition(opacity: animation, child: child);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  style: const TextStyle(),
+                                  decoration: const InputDecoration(
+                                    hintText: "Explore The Collection...",
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 24),
+
                             headerTextWidget("Categories"),
                           ],
                         ),
@@ -222,8 +237,6 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-final TextEditingController searchController = TextEditingController();
 
 List<ProductEntity> _filterCategory(
   CategoryEntity category,

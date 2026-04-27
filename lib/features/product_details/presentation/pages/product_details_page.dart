@@ -1,10 +1,10 @@
+import 'package:e_commerce/core/domain/entities/product_entity.dart';
 import 'package:e_commerce/core/utils/app_colors.dart';
 import 'package:e_commerce/core/widgets/app_footer.dart';
 import 'package:e_commerce/core/widgets/app_logo.dart';
 import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:e_commerce/core/widgets/custom_elevated_button.dart';
 import 'package:e_commerce/core/widgets/custom_text_button.dart';
-import 'package:e_commerce/features/home/domain/entities/product_entity.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailsPage extends StatelessWidget {
