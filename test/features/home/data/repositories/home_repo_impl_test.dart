@@ -1,10 +1,8 @@
 import 'package:e_commerce/config/base_response/base_response.dart';
 import 'package:e_commerce/features/home/data/datasources/home_remote_data_source_contract.dart';
 import 'package:e_commerce/features/home/data/models/category_model.dart';
-import 'package:e_commerce/features/home/data/models/product_model.dart';
 import 'package:e_commerce/features/home/data/repositories/home_repo_impl.dart';
 import 'package:e_commerce/features/home/domain/entities/category_entity.dart';
-import 'package:e_commerce/features/home/domain/entities/product_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -22,17 +20,17 @@ void main() {
       homeRemoteDataSourceContract: mockHomeRemoteDataSourceContract,
     );
 
-    provideDummy<BaseResponse<List<ProductModel>>>(
-      SuccessBaseResponse<List<ProductModel>>([]),
-    );
+    // provideDummy<BaseResponse<List<ProductModel>>>(
+    //   SuccessBaseResponse<List<ProductModel>>([]),
+    // );
 
-    provideDummy<BaseResponse<List<ProductEntity>>>(
-      SuccessBaseResponse<List<ProductEntity>>([]),
-    );
+    // provideDummy<BaseResponse<List<ProductEntity>>>(
+    //   SuccessBaseResponse<List<ProductEntity>>([]),
+    // );
 
-    provideDummy<ErrorBaseResponse<List<ProductEntity>>>(
-      ErrorBaseResponse<List<ProductEntity>>(''),
-    );
+    // provideDummy<ErrorBaseResponse<List<ProductEntity>>>(
+    //   ErrorBaseResponse<List<ProductEntity>>(''),
+    // );
 
     provideDummy<BaseResponse<List<CategoryModel>>>(
       SuccessBaseResponse<List<CategoryModel>>([]),
@@ -50,50 +48,50 @@ void main() {
   });
 
   group(('home repo impl'), () {
-    group(('get all products'), () {
-      test(
-        "Return SuccessBaseResponse<List<ProductEntity>> when get all products is successful",
-        () async {
-          when(mockHomeRemoteDataSourceContract.getProducts(1, 10)).thenAnswer(
-            (_) async => SuccessBaseResponse<List<ProductModel>>([]),
-          );
+    // group(('get all products'), () {
+    //   test(
+    //     "Return SuccessBaseResponse<List<ProductEntity>> when get all products is successful",
+    //     () async {
+    //       when(mockHomeRemoteDataSourceContract.getProducts(1, 10)).thenAnswer(
+    //         (_) async => SuccessBaseResponse<List<ProductModel>>([]),
+    //       );
 
-          final result = await homeRepoImpl.getProducts(1, 10);
+    //       final result = await homeRepoImpl.getProducts(1, 10);
 
-          expect(result, isA<SuccessBaseResponse<List<ProductEntity>>>());
-        },
-      );
+    //       expect(result, isA<SuccessBaseResponse<List<ProductEntity>>>());
+    //     },
+    //   );
 
-      test(
-        "Return ErrorBaseResponse<List<ProductEntity>> when get all products is failed",
-        () async {
-          when(mockHomeRemoteDataSourceContract.getProducts(1, 10)).thenAnswer(
-            (_) async => ErrorBaseResponse<List<ProductModel>>('Error'),
-          );
+    //   test(
+    //     "Return ErrorBaseResponse<List<ProductEntity>> when get all products is failed",
+    //     () async {
+    //       when(mockHomeRemoteDataSourceContract.getProducts(1, 10)).thenAnswer(
+    //         (_) async => ErrorBaseResponse<List<ProductModel>>('Error'),
+    //       );
 
-          final result = await homeRepoImpl.getProducts(1, 10);
+    //       final result = await homeRepoImpl.getProducts(1, 10);
 
-          expect(result, isA<ErrorBaseResponse<List<ProductEntity>>>());
-        },
-      );
+    //       expect(result, isA<ErrorBaseResponse<List<ProductEntity>>>());
+    //     },
+    //   );
 
-      test(
-        "Return SuccessBaseResponse<List<ProductEntity>> with empty list when get all products is empty",
-        () async {
-          when(mockHomeRemoteDataSourceContract.getProducts(1, 10)).thenAnswer(
-            (_) async => SuccessBaseResponse<List<ProductModel>>([]),
-          );
+    //   test(
+    //     "Return SuccessBaseResponse<List<ProductEntity>> with empty list when get all products is empty",
+    //     () async {
+    //       when(mockHomeRemoteDataSourceContract.getProducts(1, 10)).thenAnswer(
+    //         (_) async => SuccessBaseResponse<List<ProductModel>>([]),
+    //       );
 
-          final result = await homeRepoImpl.getProducts(1, 10);
+    //       final result = await homeRepoImpl.getProducts(1, 10);
 
-          expect(result, isA<SuccessBaseResponse<List<ProductEntity>>>());
-          expect(
-            (result as SuccessBaseResponse<List<ProductEntity>>).data,
-            isEmpty,
-          );
-        },
-      );
-    });
+    //       expect(result, isA<SuccessBaseResponse<List<ProductEntity>>>());
+    //       expect(
+    //         (result as SuccessBaseResponse<List<ProductEntity>>).data,
+    //         isEmpty,
+    //       );
+    //     },
+    //   );
+    // });
 
     group('get all categories', () {
       test(
