@@ -1,4 +1,5 @@
 import 'package:e_commerce/core/domain/entities/product_entity.dart';
+import 'package:e_commerce/core/widgets/app_cached_image.dart';
 import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:e_commerce/features/product_details/presentation/pages/product_details_page.dart';
 import 'package:flutter/material.dart';
@@ -34,17 +35,9 @@ class ProductWidget extends StatelessWidget {
                   // Minimal rounded corners if desired, or let it be sharp as in image.
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: Image.network(
-                  product.coverPictureUrl,
+                child: AppCachedImage(
+                  imageUrl: product.coverPictureUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => Container(
-                    color: Colors.grey[200],
-                    child: Icon(
-                      Icons.image_not_supported,
-                      size: 40,
-                      color: Colors.grey,
-                    ),
-                  ),
                 ),
               ),
             ),

@@ -2,13 +2,16 @@ import 'package:bloc/bloc.dart';
 import 'package:e_commerce/config/base_response/base_response.dart';
 import 'package:e_commerce/config/base_state/base_state.dart';
 import 'package:e_commerce/config/error_handler/error_handler.dart';
+import 'package:e_commerce/core/services/image_memory_cache.dart';
 import 'package:e_commerce/features/home/domain/entities/category_entity.dart';
 import 'package:e_commerce/core/domain/entities/pagination_entity.dart';
 import 'package:e_commerce/core/domain/entities/product_entity.dart';
 import 'package:e_commerce/core/domain/usecases/get_all_products_use_case.dart';
 import 'package:e_commerce/features/home/domain/usecases/get_category_by_id_use_case.dart';
+import 'package:e_commerce/features/home/domain/entities/category_with_products.dart';
 import 'package:equatable/equatable.dart';
 import 'package:e_commerce/features/home/domain/usecases/get_all_categories_use_case.dart';
+import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 
 part 'home_state.dart';
@@ -26,6 +29,63 @@ class HomeCubit extends Cubit<HomeState> {
        _getAllProductsUseCase = getAllProductsUseCase,
        _getCategoryByIdUseCase = getCategoryByIdUseCase,
        super(HomeState());
+
+  void _combineAndEmit() {
+    final products = state.productsState.data;
+    final categories = state.categoriesState.data;
+    if (products == null || categories == null) return;
+
+    final categoryMap = <String, CategoryWithProducts>{};
+    for (final cat in categories) {
+      categoryMap[cat.name] = CategoryWithProducts(
+        category: cat,
+        products: [],
+      );
+    }
+
+    for (final product in products) {
+      if (product.categories.isEmpty) {
+        categoryMap.putIfAbsent('Uncategorized', () => CategoryWithProducts(
+          category: CategoryEntity(
+            id: 'uncategorized',
+            name: 'Uncategorized',
+            description: 'Products without a category',
+          ),
+          products: [],
+        )).products.add(product);
+      } else {
+        for (final catName in product.categories) {
+          categoryMap.putIfAbsent(catName, () => CategoryWithProducts(
+            category: CategoryEntity(
+              id: catName,
+              name: catName,
+            ),
+            products: [],
+          )).products.add(product);
+        }
+      }
+    }
+
+    final tabs = categoryMap.values
+        .where((t) => t.products.isNotEmpty)
+        .toList();
+
+    if (isClosed) return;
+    emit(state.copyWith(categoryTabs: tabs));
+  }
+
+  Future<void> _precacheImages(List<String> urls) async {
+    final cache = ImageMemoryCache.instance;
+    for (final url in urls) {
+      if (url.isEmpty || cache.has(url)) continue;
+      try {
+        final response = await http.get(Uri.parse(url));
+        if (response.statusCode == 200) {
+          cache.set(url, response.bodyBytes);
+        }
+      } catch (_) {}
+    }
+  }
 
   /// get  products
   Future<void> getProducts() async {
@@ -49,6 +109,10 @@ class HomeCubit extends Cubit<HomeState> {
                 data: result.data.items,
               ),
             ),
+          );
+          _combineAndEmit();
+          _precacheImages(
+            result.data.items.map((p) => p.coverPictureUrl).toList(),
           );
         case ErrorBaseResponse<PaginationEntity<ProductEntity>>():
           if (isClosed) return;
@@ -107,6 +171,10 @@ class HomeCubit extends Cubit<HomeState> {
                 data: result.data,
               ),
             ),
+          );
+          _combineAndEmit();
+          _precacheImages(
+            result.data.map((c) => c.coverPictureUrl ?? '').where((u) => u.isNotEmpty).toList(),
           );
         case ErrorBaseResponse<List<CategoryEntity>>():
           if (isClosed) return;

@@ -1,5 +1,6 @@
 import 'package:e_commerce/config/di/di.dart';
 import 'package:e_commerce/core/utils/app_colors.dart';
+import 'package:e_commerce/core/widgets/app_cached_image.dart';
 import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:e_commerce/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:e_commerce/features/cart/presentation/cubit/cart_cubit.dart';
@@ -24,8 +25,8 @@ class CartItemWidget extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadiusGeometry.circular(20),
-            child: Image.network(
-              cartItem.productCoverUrl,
+            child: AppCachedImage(
+              imageUrl: cartItem.productCoverUrl,
               height: 130,
               fit: BoxFit.cover,
             ),

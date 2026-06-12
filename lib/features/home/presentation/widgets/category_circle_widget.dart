@@ -1,4 +1,5 @@
 import 'package:e_commerce/core/utils/app_colors.dart';
+import 'package:e_commerce/core/widgets/app_cached_image.dart';
 import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:e_commerce/features/home/domain/entities/category_entity.dart';
 import 'package:flutter/material.dart';
@@ -28,15 +29,8 @@ class CategoryCircleWidget extends StatelessWidget {
                 border: Border.all(color: Colors.transparent, width: 2),
               ),
               child: Center(
-                child: category.coverPictureUrl != null
-                    ? SvgPicture.network(
-                        category.coverPictureUrl!,
-                        width: 36,
-                        height: 36,
-                        fit: BoxFit.contain,
-                        placeholderBuilder: (context) => _buildPlaceholder(),
-                      )
-                    : _buildPlaceholder(),
+                child:
+                    _coverPictureUrl != null ? _buildImage() : _buildPlaceholder(),
               ),
             ),
             const SizedBox(height: 8),
@@ -53,6 +47,35 @@ class CategoryCircleWidget extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  String? get _coverPictureUrl {
+    final url = category.coverPictureUrl;
+    if (url == null || url.isEmpty) return null;
+    return url;
+  }
+
+  Widget _buildImage() {
+    final url = _coverPictureUrl!;
+    if (url.endsWith('.svg')) {
+      return SvgPicture.network(
+        url,
+        width: 36,
+        height: 36,
+        fit: BoxFit.contain,
+        placeholderBuilder: (context) => _buildPlaceholder(),
+      );
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(36),
+      child: AppCachedImage(
+        imageUrl: url,
+        width: 72,
+        height: 72,
+        fit: BoxFit.cover,
+        shape: BoxShape.circle,
       ),
     );
   }

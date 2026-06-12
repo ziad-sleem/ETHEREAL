@@ -1,5 +1,6 @@
 import 'package:e_commerce/core/domain/entities/product_entity.dart';
 import 'package:e_commerce/core/utils/app_colors.dart';
+import 'package:e_commerce/core/widgets/app_cached_image.dart';
 import 'package:e_commerce/core/widgets/app_footer.dart';
 import 'package:e_commerce/core/widgets/app_logo.dart';
 import 'package:e_commerce/core/widgets/app_text.dart';
@@ -50,7 +51,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       children: [
                         Hero(
                           tag: 'product_image_${widget.product.id}',
-                          child: Image.network(widget.product.coverPictureUrl),
+                          child: AppCachedImage(imageUrl: widget.product.coverPictureUrl),
                         ),
                         AppText(
                           text: widget.product.categories.first,
