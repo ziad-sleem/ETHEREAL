@@ -1,3 +1,4 @@
+import 'package:e_commerce/features/cart/presentation/pages/cart_page.dart';
 import 'package:e_commerce/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -22,7 +23,7 @@ class _MainPageState extends State<MainPage> {
   static const List<Widget> _pages = [
     HomePage(),
     Center(child: Text('Categories', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Favorites', style: TextStyle(fontSize: 24))),
+    CartPage(),
     Center(child: Text('Profile', style: TextStyle(fontSize: 24))),
   ];
 
@@ -55,7 +56,7 @@ class _MainPageState extends State<MainPage> {
               tabs: const [
                 GButton(icon: Icons.home_outlined, text: 'Home'),
                 GButton(icon: Icons.grid_view_outlined, text: 'Categories'),
-                GButton(icon: Icons.favorite_border, text: 'Favorites'),
+                GButton(icon: Icons.shopping_bag_outlined, text: 'Cart'),
                 GButton(icon: Icons.person_outline, text: 'Profile'),
               ],
               selectedIndex: _selectedIndex,

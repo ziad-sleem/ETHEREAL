@@ -1,9 +1,11 @@
 import 'package:e_commerce/config/di/di.dart';
 import 'package:e_commerce/core/domain/entities/product_entity.dart';
+import 'package:e_commerce/core/utils/app_colors.dart';
 import 'package:e_commerce/core/widgets/app_footer.dart';
 import 'package:e_commerce/core/widgets/app_logo.dart';
 import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:e_commerce/core/widgets/loading_widget.dart';
+import 'package:e_commerce/features/cart/presentation/pages/cart_page.dart';
 import 'package:e_commerce/features/home/domain/entities/category_entity.dart';
 import 'package:e_commerce/features/home/presentation/cubit/home_cubit.dart';
 import 'package:e_commerce/features/home/presentation/widgets/category_circle_widget.dart';
@@ -26,7 +28,20 @@ class HomePage extends StatelessWidget {
         ..getAllCategories()
         ..getProducts(),
       child: Scaffold(
-        appBar: AppBar(title: AppLogo()),
+        appBar: AppBar(
+          title: AppLogo(),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartPage()),
+                );
+              },
+              icon: Icon(Icons.shopping_bag_outlined, color: AppColors.primary),
+            ),
+          ],
+        ),
         body: BlocBuilder<HomeCubit, HomeState>(
           // Only rebuild the entire scroll view if categories change (needed for Tab length)
           buildWhen: (prev, curr) =>
@@ -63,10 +78,24 @@ class HomePage extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) => const SearchPage(),
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          return FadeTransition(opacity: animation, child: child);
-                                        },
+                                        pageBuilder:
+                                            (
+                                              context,
+                                              animation,
+                                              secondaryAnimation,
+                                            ) => const SearchPage(),
+                                        transitionsBuilder:
+                                            (
+                                              context,
+                                              animation,
+                                              secondaryAnimation,
+                                              child,
+                                            ) {
+                                              return FadeTransition(
+                                                opacity: animation,
+                                                child: child,
+                                              );
+                                            },
                                       ),
                                     );
                                   },
@@ -190,8 +219,10 @@ class HomePage extends StatelessWidget {
                   childAspectRatio: 0.65,
                 ),
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) =>
-                      ProductWidget(product: productByCategory[index]),
+                  (context, index) => ProductWidget(
+                    key: ValueKey(productByCategory[index].id), 
+                    product: productByCategory[index],
+                  ),
                   childCount: productByCategory.length,
                 ),
               ),

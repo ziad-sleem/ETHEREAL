@@ -203,4 +203,21 @@ class MockAuthLocalDataSourceContract extends _i1.Mock
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> saveExpirationDate(String? expiresAt) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveExpirationDate, [expiresAt]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<String?> getExpirationDate() =>
+      (super.noSuchMethod(
+            Invocation.method(#getExpirationDate, []),
+            returnValue: _i3.Future<String?>.value(),
+          )
+          as _i3.Future<String?>);
 }
