@@ -1,12 +1,11 @@
 import 'package:e_commerce/config/di/di.dart';
-import 'package:e_commerce/core/domain/entities/product_entity.dart';
 import 'package:e_commerce/core/utils/app_colors.dart';
 import 'package:e_commerce/core/widgets/app_footer.dart';
 import 'package:e_commerce/core/widgets/app_logo.dart';
 import 'package:e_commerce/core/widgets/app_text.dart';
 import 'package:e_commerce/core/widgets/loading_widget.dart';
 import 'package:e_commerce/features/cart/presentation/pages/cart_page.dart';
-import 'package:e_commerce/features/home/domain/entities/category_entity.dart';
+import 'package:e_commerce/features/home/domain/entities/category_with_products.dart';
 import 'package:e_commerce/features/home/presentation/cubit/home_cubit.dart';
 import 'package:e_commerce/features/home/presentation/widgets/category_circle_widget.dart';
 import 'package:e_commerce/features/home/presentation/widgets/director_widget.dart';
@@ -43,23 +42,20 @@ class HomePage extends StatelessWidget {
           ],
         ),
         body: BlocBuilder<HomeCubit, HomeState>(
-          // Only rebuild the entire scroll view if categories change (needed for Tab length)
           buildWhen: (prev, curr) =>
-              prev.categoriesState.data?.length !=
-              curr.categoriesState.data?.length,
+              prev.categoryTabs.length != curr.categoryTabs.length,
           builder: (context, state) {
-            final categories = state.categoriesState.data ?? [];
+            final tabs = state.categoryTabs;
 
-            if (state.categoriesState.isLoading && categories.isEmpty) {
+            if (state.categoriesState.isLoading && tabs.isEmpty) {
               return const Center(child: AppLoader());
             }
 
             return DefaultTabController(
-              length: categories.isEmpty ? 1 : categories.length,
+              length: tabs.isEmpty ? 1 : tabs.length,
               child: NestedScrollView(
                 headerSliverBuilder: (context, innerBoxIsScrolled) {
                   return [
-                    // 1. Editorial Sections (Semi-Static)
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -79,18 +75,10 @@ class HomePage extends StatelessWidget {
                                       context,
                                       PageRouteBuilder(
                                         pageBuilder:
-                                            (
-                                              context,
-                                              animation,
-                                              secondaryAnimation,
-                                            ) => const SearchPage(),
+                                            (context, animation, secondaryAnimation) =>
+                                                const SearchPage(),
                                         transitionsBuilder:
-                                            (
-                                              context,
-                                              animation,
-                                              secondaryAnimation,
-                                              child,
-                                            ) {
+                                            (context, animation, secondaryAnimation, child) {
                                               return FadeTransition(
                                                 opacity: animation,
                                                 child: child,
@@ -107,14 +95,12 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 24),
-
                             headerTextWidget("Categories"),
                           ],
                         ),
                       ),
                     ),
 
-                    // 2. Categories Horizontal List (Scoped Rebuild)
                     SliverToBoxAdapter(
                       child: BlocBuilder<HomeCubit, HomeState>(
                         buildWhen: (prev, curr) =>
@@ -125,9 +111,7 @@ class HomePage extends StatelessWidget {
                             height: 140,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
                               itemCount: cats.length,
                               itemBuilder: (context, index) =>
                                   CategoryCircleWidget(category: cats[index]),
@@ -137,7 +121,6 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
 
-                    // 3. Pinned TabBar (Sync with Body)
                     SliverAppBar(
                       pinned: true,
                       floating: true,
@@ -162,26 +145,27 @@ class HomePage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2,
                           ),
-                          tabs: categories
-                              .map((c) => Tab(text: c.name.toUpperCase()))
+                          tabs: tabs
+                              .map((t) => Tab(text: t.category.name.toUpperCase()))
                               .toList(),
                         ),
                       ),
                     ),
                   ];
                 },
-                // 4. Products View (Scoped Rebuild)
                 body: BlocBuilder<HomeCubit, HomeState>(
                   buildWhen: (prev, curr) =>
-                      prev.productsState != curr.productsState,
+                      prev.categoryTabs != curr.categoryTabs,
                   builder: (context, state) {
-                    final products = state.productsState.data ?? [];
-                    if (state.productsState.isLoading && products.isEmpty) {
+                    final tabs = state.categoryTabs;
+                    if (state.productsState.isLoading && tabs.isEmpty) {
                       return const Center(child: AppLoader());
                     }
 
                     return TabBarView(
-                      children: _buildCategoryTabs(categories, products),
+                      children: tabs.isEmpty
+                          ? [const SizedBox.shrink()]
+                          : tabs.map((tab) => _buildCategoryTab(tab)).toList(),
                     );
                   },
                 ),
@@ -193,70 +177,61 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildCategoryTabs(
-    List<CategoryEntity> categories,
-    List<ProductEntity> allProducts,
-  ) {
-    if (categories.isEmpty) return [const SizedBox.shrink()];
-
-    return categories.map((category) {
-      final productByCategory = _filterCategory(category, allProducts);
-      return CustomScrollView(
-        key: PageStorageKey(category.name),
-        slivers: [
-          if (productByCategory.isEmpty)
-            const SliverFillRemaining(
-              child: Center(child: AppText(text: 'No products here')),
-            )
-          else
-            SliverPadding(
-              padding: const EdgeInsets.all(16),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.65,
+  Widget _buildCategoryTab(CategoryWithProducts tabData) {
+    return CustomScrollView(
+      key: PageStorageKey(tabData.category.name),
+      slivers: [
+        if (tabData.products.isEmpty)
+          const SliverFillRemaining(
+            child: Center(child: AppText(text: 'No products here')),
+          )
+        else
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 0.65,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => ProductWidget(
+                  key: ValueKey(tabData.products[index].id),
+                  product: tabData.products[index],
                 ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => ProductWidget(
-                    key: ValueKey(productByCategory[index].id), 
-                    product: productByCategory[index],
-                  ),
-                  childCount: productByCategory.length,
-                ),
+                childCount: tabData.products.length,
               ),
             ),
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.0),
-              child: SizedBox(height: 10),
-            ),
           ),
-          const SliverToBoxAdapter(child: DiscoverFilmWidget()),
-          const SliverToBoxAdapter(child: DirectorWidget()),
-          SliverToBoxAdapter(
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                final products = state.productsState.data ?? [];
-                if (state.productsState.isLoading || products.isEmpty) {
-                  return const SizedBox.shrink();
-                }
-                return SelectedForYouWidget(products: products);
-              },
-            ),
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 2.0),
+            child: SizedBox(height: 10),
           ),
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: SizedBox(height: 30),
-            ),
+        ),
+        const SliverToBoxAdapter(child: DiscoverFilmWidget()),
+        const SliverToBoxAdapter(child: DirectorWidget()),
+        SliverToBoxAdapter(
+          child: BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              final allProducts = state.productsState.data ?? [];
+              if (state.productsState.isLoading || allProducts.isEmpty) {
+                return const SizedBox.shrink();
+              }
+              return SelectedForYouWidget(products: allProducts);
+            },
           ),
-
-          const SliverToBoxAdapter(child: AppFooter()),
-        ],
-      );
-    }).toList();
+        ),
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: SizedBox(height: 30),
+          ),
+        ),
+        const SliverToBoxAdapter(child: AppFooter()),
+      ],
+    );
   }
 
   Widget headerTextWidget(String text) {
@@ -267,14 +242,4 @@ class HomePage extends StatelessWidget {
       textWeight: FontWeight.bold,
     );
   }
-}
-
-List<ProductEntity> _filterCategory(
-  CategoryEntity category,
-  List<ProductEntity> allProducts,
-) {
-  return allProducts.where((product) {
-    final categories = product.categories as List<dynamic>?;
-    return categories?.contains(category.name) ?? false;
-  }).toList();
 }

@@ -4,10 +4,12 @@ part 'get_products_request_body.g.dart';
 
 @JsonSerializable()
 class GetProductsRequestBody {
+  final bool isInStock;
   final int page;
   final int pageSize;
 
   GetProductsRequestBody({
+    this.isInStock = true,
     required this.page,
     required this.pageSize,
   });

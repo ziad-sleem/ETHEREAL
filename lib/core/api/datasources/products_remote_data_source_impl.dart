@@ -19,11 +19,9 @@ class ProductsRemoteDataSourceImpl implements ProductsRemoteDataSourceContract {
     int pageSize,
   ) async {
     try {
-      final requestBody = GetProductsRequestBody(
-        page: page,
-        pageSize: pageSize,
+      final response = await productsApiClient.getProducts(
+        GetProductsRequestBody(page: page, pageSize: pageSize),
       );
-      final response = await productsApiClient.getProducts(requestBody);
 
       return SuccessBaseResponse<PaginationModel<ProductModel>>(response);
     } catch (e) {
