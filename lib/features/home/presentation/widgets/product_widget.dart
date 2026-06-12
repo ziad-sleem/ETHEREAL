@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class ProductWidget extends StatelessWidget {
   final ProductEntity product;
-  const ProductWidget({super.key, required this.product});
+  const ProductWidget({super.key, required this.product,});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class ProductWidget extends StatelessWidget {
                 child: Image.network(
                   product.coverPictureUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
+                  errorBuilder: (_, _, _) => Container(
                     color: Colors.grey[200],
                     child: Icon(
                       Icons.image_not_supported,

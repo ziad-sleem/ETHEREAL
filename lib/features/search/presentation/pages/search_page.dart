@@ -121,7 +121,10 @@ class _SearchPageState extends State<SearchPage> {
                           if (index >= products.length) {
                             return const Center(child: AppLoader());
                           }
-                          return ProductWidget(product: products[index]);
+                          return ProductWidget(
+                            key: ValueKey(products[index].id),
+                            product: products[index],
+                          );
                         },
                       );
                     },

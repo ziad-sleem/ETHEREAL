@@ -15,4 +15,8 @@ class EndPoints {
   static const String products = "products";
   static const String categories = "categories";
   static const String categoryById = "categories/{id}";
+
+  static const String cart = "cart";
+  static const String cartItems = "cart/items";
+  static const String deleteCartItem = "cart/items/{id}";
 }

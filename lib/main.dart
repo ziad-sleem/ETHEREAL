@@ -1,5 +1,6 @@
 import 'package:e_commerce/config/di/di.dart';
 import 'package:e_commerce/core/utils/app_theme.dart';
+import 'package:e_commerce/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:e_commerce/features/main%20page/main_page.dart';
 import 'package:e_commerce/features/authentication/presentation/cubit/auth_cubit.dart';
 import 'package:e_commerce/features/authentication/presentation/pages/auth_page.dart';
@@ -17,12 +18,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.mainTheme,
-      home: BlocProvider(
-        create: (context) => getIt<AuthCubit>()..checkSession(),
-        child: BlocBuilder<AuthCubit, AuthState>(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => getIt<AuthCubit>()..checkSession()),
+        BlocProvider(create: (context) => getIt<CartCubit>()..getCart()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.mainTheme,
+        home: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
             if (state.checkSessionState.isLoading) {
               return const Scaffold(

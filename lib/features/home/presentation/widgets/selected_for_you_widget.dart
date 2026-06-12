@@ -41,7 +41,10 @@ class SelectedForYouWidget extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 16),
             itemBuilder: (context, index) => SizedBox(
               width: 180,
-              child: ProductWidget(product: products[index]),
+              child: ProductWidget(
+                key: ValueKey(products[index].id),
+                product: products[index],
+              ),
             ),
           ),
         ),
